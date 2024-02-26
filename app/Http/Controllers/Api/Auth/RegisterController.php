@@ -9,6 +9,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -21,6 +22,9 @@ class RegisterController extends Controller
         $register->password = Hash::make($request->password);
         
         $register->save();
+
+         // Envoyer l'e-mail de confirmation
+        Mail::to($register->email)->send(new ConfirmationMail($register));
 
             return response()->json([
                 'status' => 'success',
